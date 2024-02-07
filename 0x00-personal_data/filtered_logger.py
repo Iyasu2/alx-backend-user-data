@@ -5,6 +5,11 @@ this is a module
 import re
 from typing import List
 
+patterns = {
+    'extract': lambda x, y: r'(?P<field>{})=[^{}]*'.format('|'.join(x), y),
+    'replace': lambda x: r'\g<field>={}'.format(x),
+}
+
 
 def filter_datum(
         fields: List[str],
@@ -14,12 +19,5 @@ def filter_datum(
     '''
     this is a function
     '''
-    pattern = separator.join(
-            [f"{field}=.*?{separator}" for field in fields]
-            )
-    return re.sub(
-            pattern,
-            lambda match: match.group().replace(
-                match.group().split('=')[1].rstrip(separator),
-                redaction), message
-            )
+    extract, replace = (patterns["extract"], patterns["replace"])
+    return re.sub(extract(fields, separator), replace(redaction), message)
