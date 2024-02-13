@@ -7,8 +7,6 @@ import base64
 from typing import TypeVar
 from models.user import User
 
-User = TypeVar('User')
-
 
 class BasicAuth(Auth):
     '''
@@ -67,6 +65,8 @@ class BasicAuth(Auth):
             user_pwd: str
             ) -> User:
         """ Method to get the User instance based on email and password """
+        User = TypeVar('User')
+
         if user_email is None or type(user_email) is not str:
             return None, None
         if user_pwd is None or type(user_pwd) is not str:
